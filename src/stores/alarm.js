@@ -7,7 +7,7 @@ export const useAlarmStore = defineStore('alarm',{
       list: [{ id: 1, name: "鈴聲", url: new URL('../assets/alarm.mp3', import.meta.url).href }, { id: 2, name: "其他", url: new URL('../assets/yay.mp3', import.meta.url).href }]
     }),
     actions:{
-      playVideo(){
+      playAudio(){
         const audio = new Audio()
         audio.src = this.list[this.set - 1].url
         audio.volume = this.volume / 100

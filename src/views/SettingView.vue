@@ -15,7 +15,7 @@ import { watch } from 'vue'
 const alarm = useAlarmStore()
 const {set,volume} = storeToRefs(alarm)
 watch(set, () => {
-alarm.playVideo()
+alarm.playAudio()
 })
 
 </script>
