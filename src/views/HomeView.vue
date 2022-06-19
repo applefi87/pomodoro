@@ -26,7 +26,7 @@ listPage
 import { ref, reactive } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
-import listPage from '../components/listPage2.vue'
+import listPage from '../components/listPage.vue'
 const alarm = useAlarmStore()
 const dataList = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
@@ -84,6 +84,9 @@ const end = (num) => {
   // 停止全部計時
   clearInterval(timer)
   clearInterval(distractTimer)
+  if (alarm.notify) {
+    new Notification(nowItem.name + '時間到', { body: 'nowItem.name', icon: 'https://github.com/rogeraabbccdd.png' })
+  }
   // 更新專心時間-分心時間
   nowItem.totalTime = nowItem.totalTime - distractTime
   // 更新分心時間+關閉分心狀態
@@ -91,8 +94,8 @@ const end = (num) => {
   distracting.value = false
   // 當前加到結束去
   dataList.endLists.push(nowItem)
-  if (num===0) {alarm.playAudio()}
-  else if(num){
+  if (num === 0) { alarm.playAudio() }
+  else if (num) {
     alarm.playAudio(num)
   }
   update()
@@ -126,7 +129,7 @@ const earlier = () => {
   end(2)
 }
 const duplicate = () => {
-dataList.lists.unshift(JSON.parse(JSON.stringify(nowItem)))
+  dataList.lists.unshift(JSON.parse(JSON.stringify(nowItem)))
 }
 
 </script >

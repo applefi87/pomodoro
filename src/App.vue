@@ -7,11 +7,17 @@ v-app
     v-spacer
     v-btn(icon="mdi-home" to="/")
     v-btn(icon="mdi-format-list-bulleted-square" to="/list")
+    v-btn(v-if="alarm.notify" icon="mdi-bell" @click='alarm.changeNotify')
+    v-btn(v-else icon="mdi-bell-off" @click='alarm.changeNotify')
     v-btn(icon="mdi-dots-vertical" to="/setting")
   v-main
     v-container(fluid)
-      router-view
+      router-view(v-slot="{Component}")
+        keep-alive(include='HomeView')
+          component(:is="Component")
 </template>
 
 <script setup>
+import {useAlarmStore} from './stores/alarm.js'
+const alarm = useAlarmStore()
 </script>
