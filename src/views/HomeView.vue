@@ -27,8 +27,15 @@ import { ref, reactive } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
 import listPage from '../components/listPage.vue'
+
+// 
 const alarm = useAlarmStore()
 const dataList = useDataStore()
+// 匯入localstorage
+if(localStorage.getItem('oldList')){
+  dataList.lists = JSON.parse(localStorage.getItem('oldList'))
+}
+// 
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
