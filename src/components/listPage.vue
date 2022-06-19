@@ -1,7 +1,7 @@
 <template lang="pug">
 transition-group(tag="ul" name="list" type="transition-group")
-  draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" )
-    template(#item='{ element }')
+  draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id' )
+    template(#item='{ element }' )
       li.list-group-item
         v-icon.mr-4(icon="mdi-drag-horizontal-variant")
         span.title 名稱:
@@ -35,6 +35,7 @@ const dragOptions = computed(() => {
 <style lang="sass" scoped>
 li
   vertical-align: middle
+  margin: 20px 0 0 0
 .title
   font-weight: 700
   font-size: 20px
@@ -45,13 +46,13 @@ li
   margin-right: 80px
 
 
-  // 移動清單
+  // 移動清單 (下方調速度未完成)
 
 .flip-list-move 
-  transition: transform 0.5s
+  transition: transform 2s
 
 .no-move 
-  transition: transform 0s
+  transition: transform 2s
 
 .ghost 
   opacity: 0.5
@@ -61,9 +62,10 @@ li
   min-height: 20px
 
 .list-group-item 
-  cursor: move
+  cursor: pointer
 
 .list-group-item i 
-  cursor: pointer
+  
+  cursor: move
 
 </style>
