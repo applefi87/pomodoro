@@ -5,12 +5,9 @@ v-app
     template(v-slot:prepend)
     v-app-bar-title Title
     v-spacer
-    v-btn(icon to="/")
-      v-icon mdi-magnify
-    v-btn(icon to="/list")
-      v-icon mdi-heart
-    v-btn(icon to="/setting")
-      v-icon mdi-dots-vertical
+    v-btn(icon="mdi-home" to="/")
+    v-btn(icon="mdi-format-list-bulleted-square" to="/list")
+    v-btn(icon="mdi-dots-vertical" to="/setting")
   v-main
     v-container(fluid)
       router-view

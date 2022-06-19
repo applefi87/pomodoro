@@ -74,11 +74,11 @@ const countDown = () => {
   timer = setInterval(() => {
     leftTimeDisplay.value = timeFormated(--leftTime)
     if (leftTime === 0) {
-      end(true)
+      end(0)
     }
   }, 1000)
 }
-const end = (b) => {
+const end = (num) => {
   // 停止全部計時
   clearInterval(timer)
   clearInterval(distractTimer)
@@ -89,7 +89,10 @@ const end = (b) => {
   distracting.value = false
   // 當前加到結束去
   dataList.endLists.push(nowItem)
-  if (b) (alarm.playAudio())
+  if (num===0) {alarm.playAudio()}
+  else if(num){
+    alarm.playAudio(num)
+  }
   update()
 }
 const update = () => {
@@ -118,7 +121,7 @@ const stop = () => {
 }
 const earlier = () => {
   nowItem.totalTime = nowItem.id > 0 ? nowItem.totalTime - leftTime - distractTime : rest - leftTime
-  end(false)
+  end(2)
 }
 const duplicate = () => {
 dataList.lists.unshift(JSON.parse(JSON.stringify(nowItem)))
