@@ -1,19 +1,24 @@
 <template lang="pug">
-h1(v-if="playState === '專心中'") 專案:{{ nowItem.project }}  名稱: {{ nowItem.name }}
-h1(v-else)  名稱: {{ nowItem.name }}  
-hr
-h1.text-center
-v-row.text-center
-  v-col(cols='8').timer  {{ leftTimeDisplay }} 
-  v-col(cols='4' v-if="going && playState === '專心中'").timer 分心:{{ distractTimeDisplay }}
-  v-col(cols='8' )
-    v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
-    v-btn.mx-3(v-else icon='mdi-pause' @click='stop')
-    v-btn.mx-3(icon='mdi-skip-next' @click='earlier')
-  v-col(cols='4' v-if="going && playState === '專心中'")
-    v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
-    v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
-    //- v-btn.mx-3(icon='mdi-skip-next' @click='earlier')
+div(v-if="dataList.lists.length == 0")
+  h1.text-center 無任務，請新增於下方
+div(v-else)
+  h1(v-if="playState === '專心中'") 專案:{{ nowItem.project }}  名稱: {{ nowItem.name }}
+  h1(v-else)  名稱: {{ nowItem.name }}  
+  hr
+  h1.text-center
+  v-row.text-center
+    v-col(cols='8').timer  {{ leftTimeDisplay }} 
+    v-col(cols='4' v-if="going && playState === '專心中'").timer 分心:{{ distractTimeDisplay }}
+    v-col(cols='8' )
+      v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
+      div.mx-3(v-else)
+        v-btn.mx-3( icon='mdi-pause' @click='stop')
+        v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
+        v-btn.mx-3( icon='mdi-content-duplicate' @click='duplicate')
+    v-col(cols='4' v-if="going && playState === '專心中'")
+      v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
+      v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
+      //- v-btn.mx-3(icon='mdi-skip-next' @click='earlier')
 </template>
 
 <script setup>
@@ -42,6 +47,9 @@ const playState = ref('專心中')
 let timer = 0
 let distractTimer = 0
 const start = () => {
+  if (dataList.lists.length == 0) {
+    return false
+  }
   going.value = true
   distractTime = 0
   if (playState.value === '專心中') {
@@ -51,10 +59,6 @@ const start = () => {
     leftTime = rest
     Object.assign(nowItem, dataList.restLists[0])
     // 清單空了，跳成結束畫面停止執行
-    if (dataList.lists.length == 0) {
-      Object.assign(nowItem, dataList.restLists[2])
-      return false
-    }
   } else {
     Object.assign(nowItem, dataList.restLists[1])
   }
@@ -75,7 +79,7 @@ const countDown = () => {
   }, 1000)
 }
 const end = (b) => {
-  // 停止全部的計時
+  // 停止全部計時
   clearInterval(timer)
   clearInterval(distractTimer)
   // 更新專心時間-分心時間
@@ -83,10 +87,8 @@ const end = (b) => {
   // 更新分心時間+關閉分心狀態
   nowItem.distractTime = distractTime
   distracting.value = false
-
   // 當前加到結束去
   dataList.endLists.push(nowItem)
-  console.log(dataList.endLists[dataList.endLists.length - 1]);
   if (b) (alarm.playAudio())
   update()
 }
@@ -115,10 +117,12 @@ const stop = () => {
   going.value = false
 }
 const earlier = () => {
-  nowItem.totalTime = nowItem.id > 0 ? time - leftTime - distractTime : rest - leftTime
+  nowItem.totalTime = nowItem.id > 0 ? nowItem.totalTime - leftTime - distractTime : rest - leftTime
   end(false)
 }
-
+const duplicate = () => {
+dataList.lists.unshift(JSON.parse(JSON.stringify(nowItem)))
+}
 
 </script >
 
