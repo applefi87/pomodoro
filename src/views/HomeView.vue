@@ -18,13 +18,15 @@ div(v-else)
     v-col(cols='4' v-if="going && playState === '專心中'")
       v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
       v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
-      //- v-btn.mx-3(icon='mdi-skip-next' @click='earlier')
+hr
+listPage
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
+import listPage from '../components/listPage2.vue'
 const alarm = useAlarmStore()
 const dataList = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
