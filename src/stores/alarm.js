@@ -15,7 +15,7 @@ export const useAlarmStore = defineStore('alarm', {
       audio.play()
     },
     changeNotify() {
-      if (!this.notify&& 'Notification' in window) {
+      if (!this.notify && 'Notification' in window) {
         console.log(window);
         Notification.requestPermission(p => {
           if (p === 'granted') {
@@ -26,5 +26,8 @@ export const useAlarmStore = defineStore('alarm', {
         this.notify = false
       }
     }
-  }
+  },
+  persist: {
+    key: 'pomotoro-setting',
+  },
 })

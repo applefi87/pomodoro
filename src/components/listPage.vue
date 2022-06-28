@@ -1,15 +1,19 @@
 <template lang="pug">
-transition-group(tag="ul" name="list" type="transition-group")
-  draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id' )
-    template(#item='{ element }' )
+transition-group(tag="ul" name="list" type="transition-group" :data="data")
+  draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id')
+    template(#item='{ element }'  )
       li.list-group-item
         v-icon.mr-4(icon="mdi-drag-horizontal-variant")
         span.title 名稱:
-        span.input {{ element.name }}
+        
+        span.input(v-if="!element.edit") {{ element.title +element.edit}}
+        span.input(v-else) {{ data.editTitle }}
         span.title 專案:
-        span.input {{ element.name }}      
-        v-icon.edit(icon="mdi-pencil") 
+        span.input(v-if="!element.edit") {{ element.project }}
+        span.input(v-else) {{ data.editProject }}     
+        v-icon.edit(icon="mdi-pencil" @click="data.edit(element.id)") 
         v-icon(icon="mdi-content-duplicate") 
+        | {{data.id}}
 </template>
 
 <script setup>
@@ -40,8 +44,10 @@ li
   font-weight: 700
   font-size: 20px
 .input
-  width: 120px
+  width: 200px
   display: inline-block
+.input.project
+  width: 150px
 .edit
   margin-right: 80px
 
