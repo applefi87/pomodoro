@@ -23,7 +23,7 @@ div(v-else)
       div.mx-3(v-else)
         v-btn.mx-3( icon='mdi-pause' @click='stop')
         v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
-        v-btn.mx-3( icon='mdi-content-duplicate' @click='duplicate')
+      v-btn.mx-3( icon='mdi-content-duplicate' @click='nowItem.id>0?data.duplicate(0):1' :style="dulplicateStyle")
     v-col(cols='4' v-if="going && playState === '專心中'")
       v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
       v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
@@ -44,7 +44,7 @@ const data = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
-const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", focusTime: 0, distractTime: 0, startTime:0 })
+const nowItem = reactive(data.lists[0] || { id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", focusTime: 0, distractTime: 0, startTime: 0 })
 let leftTime = 0
 let distractTime = 0
 const leftTimeDisplay = ref('00:00')
@@ -69,7 +69,7 @@ const start = () => {
   if (playState.value === '專心中') {
     leftTime = time
     // 加上開始時間+丟到執行中
-    data.lists[0].startTime= new Date().getHours() + ':'+new Date().getMinutes()
+    data.lists[0].startTime = new Date().getHours() + ':' + new Date().getMinutes()
     Object.assign(nowItem, data.lists[0])
   } else if (playState.value === '休息中') {
     leftTime = rest
@@ -153,9 +153,11 @@ const earlier = () => {
   nowItem.focusTime = nowItem.id > 0 ? nowItem.focusTime - leftTime - distractTime : rest - leftTime
   end(2)
 }
-const duplicate = () => {
-  data.lists.unshift(JSON.parse(JSON.stringify(nowItem)))
-}
+
+// 休息不可複製的造型(複製功能在data裡)
+const dulplicateStyle = computed(() => {
+  return playState.value === '休息中' ? { background: '#933', cursor: 'not-allowed' } : {}
+})
 
 
 // --最上欄功能:

@@ -14,7 +14,7 @@ transition-group(tag="ul" name="list" type="transition-group" :data="data")
         div.editbtn(v-else)
           v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
           v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
-        v-icon(icon="mdi-content-duplicate")
+        v-icon(icon="mdi-content-duplicate" @click="data.duplicate(element.id)")
 
 </template>
 
