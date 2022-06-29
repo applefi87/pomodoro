@@ -9,7 +9,6 @@ v-app
     v-btn(icon="mdi-format-list-bulleted-square" to="/list")
     v-btn(v-if="alarm.notify" icon="mdi-bell" @click='alarm.changeNotify')
     v-btn(v-else icon="mdi-bell-off" @click='alarm.changeNotify')
-    v-btn(icon="mdi-content-save" @click='save')
     v-btn(icon="mdi-dots-vertical" to="/setting")
   v-main
     v-container(fluid)
@@ -23,9 +22,4 @@ import {useAlarmStore} from './stores/alarm.js'
 import {useDataStore} from './stores/data.js'
 const alarm = useAlarmStore()
 const dataList = useDataStore()
-const save = ()=>{
-  if(dataList.lists.length>0){
-    localStorage.setItem('oldList',JSON.stringify(dataList.lists))
-  }
-}
 </script>

@@ -20,7 +20,7 @@ div(v-else)
     v-col(cols='4' v-if="going && playState === '專心中'").timer 分心:{{ distractTimeDisplay }}
     v-col(cols='8' )
       v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
-      div.mx-3(v-else)
+      div.mx-3(v-else :style="{display:'inline-block'}")
         v-btn.mx-3( icon='mdi-pause' @click='stop')
         v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
       v-btn.mx-3( icon='mdi-content-duplicate' @click='nowItem.id>0?data.duplicate(0):1' :style="dulplicateStyle")
@@ -32,14 +32,14 @@ listPage
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed,toRefs } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
 import listPage from '../components/listPage.vue'
 
 const alarm = useAlarmStore()
 const data = useDataStore()
-
+const {going} = toRefs(data)
 
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
@@ -51,7 +51,7 @@ const leftTimeDisplay = ref('00:00')
 const distractTimeDisplay = ref('00:00')
 
 
-const going = ref(false)
+going.value = false
 const distracting = ref(false)
 const pauseTime = ref(0)
 // '專心中'/'休息中'/'大休息'

@@ -8,7 +8,8 @@ export const useDataStore = defineStore('data', {
     restLists: [{ id: -1, title: '小休息', project: "", edit: false, focusTime: 0, distractTime: 0, startTime: 0 }, { id: -2, title: '大休息', project: "", edit: false, focusTime: 0, distractTime: 0, startTime: 0 }, { id: -3, title: '結束', project: "", focusTime: 0, edit: false, distractTime: 0, startTime: 0 }],
     id: 4,
     editTitle: '',
-    editProject: ''
+    editProject: '',
+    going:false
   }),
 
   actions: {
