@@ -3,7 +3,7 @@ transition-group(tag="ul" name="list" type="transition-group" :data="data")
   draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id')
     template(#item='{ element }'  )
       li.list-group-item
-        v-icon.mr-4(icon="mdi-drag-horizontal-variant")
+        v-icon.mr-4.drag(icon="mdi-drag-horizontal-variant")
         span.title 名稱:
         span.input(v-if="!element.edit") {{ element.title }}
         input.input(v-else type="text" v-model="data.editTitle" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
@@ -12,8 +12,8 @@ transition-group(tag="ul" name="list" type="transition-group" :data="data")
         input.input(v-else  type="text" v-model="data.editProject" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
         v-icon.edit(v-if="!element.edit" icon="mdi-pencil" @click="data.edit(element.id)")
         div.editbtn(v-else)
-          v-icon.edit(icon="mdi-check" @click="data.editSubmit(element.id)") 
-          v-icon.edit(icon="mdi-cancel" @click="data.editCancel(element.id)") 
+          v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
+          v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
         v-icon(icon="mdi-content-duplicate")
 
 </template>
@@ -55,10 +55,11 @@ input.input
 .input.project
   width: 150px
 .edit
-  margin-right: 80px
+  margin-right: 30px
+.editing
+  margin-right: 3px
 .editbtn
   display: inline-block
-
   // 移動清單 (下方調速度未完成)
 
 .flip-list-move 
@@ -75,10 +76,17 @@ input.input
   min-height: 20px
 
 .list-group-item 
-  cursor: pointer
+  cursor: default
+  height:40px
 
-.list-group-item i 
-  
+.list-group-item .drag 
   cursor: move
-
+.list-group-item i 
+  width:30px
+  cursor: pointer
+  border-radius: 5px
+  line-height: 30px
+  &:hover
+    background: #ddd
+    font-size: 27px
 </style>

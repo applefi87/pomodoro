@@ -70,7 +70,7 @@ const start = () => {
   distractTime = 0
   if (playState.value === '專心中') {
     leftTime = time
-    Object.assign(nowItem, data.lists.shift())
+    Object.assign(nowItem, data.lists[0])
   } else if (playState.value === '休息中') {
     leftTime = rest
     Object.assign(nowItem, data.restLists[0])
@@ -108,8 +108,13 @@ const end = (num) => {
   nowItem.totalTime = nowItem.totalTime - distractTime
   // 更新分心時間
   nowItem.distractTime = distractTime
-  // 當前加到結束去
+  // 當前加到結束去 再刪除第一個項目(避免讀取時就刪，更新頁面當前任務就會遺失)
   data.endLists.push(nowItem)
+  if (playState.value === '專心中') {
+    data.lists.shift()
+  }
+
+
   if (num === 0) { alarm.playAudio() }
   else if (num) {
     alarm.playAudio(num)
