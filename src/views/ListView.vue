@@ -1,13 +1,14 @@
 <template lang="pug">
+button(@click="clear") 清空
 table
   tr
-    th 專案
     th 標題
+    th 專案
     th 專心
     th 分心
   tr(v-for="it in data.endLists")
-    td.project {{ it.project }}
     td.title {{ it.title }}
+    td.project {{ it.project }}
     td.focus {{ it.totalTime }}
     td.distract {{ it.distractTime }}
 
@@ -16,6 +17,10 @@ table
 <script setup>
 import { useDataStore } from '../stores/data.js'
 const data = useDataStore()
+const clear = () => {
+data.endLists=[]
+}
+
 </script>
 
 <style lang="sass" scoped>
@@ -27,7 +32,7 @@ table
 td,th
   border:1px solid black
   padding:0 10px
-.project
+.title
   width: 40%
 
 </style>

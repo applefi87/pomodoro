@@ -40,6 +40,9 @@ export const useDataStore = defineStore('data', {
       } else {
         this.lists = this.lists.map(it => {it.edit = false;return it})
       }
+    },
+    timeFormated(n){
+      return Math.floor(n / 60).toString().padStart(2, '0') + ':' + (n % 60).toString().padStart(2, '0')
     }
   },
   persist: {

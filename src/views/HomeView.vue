@@ -44,14 +44,13 @@ const data = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
-const nowItem = reactive(data.lists[0])
+const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", totalTime: 0, distractTime: 0, })
+console.log(nowItem);
 let leftTime = 0
 let distractTime = 0
 const leftTimeDisplay = ref('00:00')
 const distractTimeDisplay = ref('00:00')
-const timeFormated = (n) => {
-  return Math.floor(n / 60).toString().padStart(2, '0') + ':' + (n % 60).toString().padStart(2, '0')
-}
+
 
 const going = ref(false)
 const distracting = ref(false)
@@ -81,14 +80,14 @@ const start = () => {
   // 先存進去該次的總計時 避免過程改掉抓到新的
   nowItem.totalTime = time
   // 當下立刻更新顯示時間
-  leftTimeDisplay.value = timeFormated(leftTime)
-  distractTimeDisplay.value = timeFormated(distractTime)
+  leftTimeDisplay.value = data.timeFormated(leftTime)
+  distractTimeDisplay.value = data.timeFormated(distractTime)
   countDown()
 }
 
 const countDown = () => {
   timer = setInterval(() => {
-    leftTimeDisplay.value = timeFormated(--leftTime)
+    leftTimeDisplay.value = data.timeFormated(--leftTime)
     if (leftTime === 0) {
       end(0)
     }
@@ -108,9 +107,10 @@ const end = (num) => {
   nowItem.totalTime = nowItem.totalTime - distractTime
   // 更新分心時間
   nowItem.distractTime = distractTime
-  // 當前加到結束去 再刪除第一個項目(避免讀取時就刪，更新頁面當前任務就會遺失)
-  data.endLists.push(nowItem)
+
+  // 非休息時，當前任務加到結束去 再刪除第一個項目(如果讀取時就刪>結束再存，更新頁面會導致當前任務遺失)
   if (playState.value === '專心中') {
+    data.endLists.push(JSON.parse(JSON.stringify(nowItem)))
     data.lists.shift()
   }
 
@@ -119,6 +119,7 @@ const end = (num) => {
   else if (num) {
     alarm.playAudio(num)
   }
+  console.log(data.endLists);
   update()
 }
 // 更新狀態文字
@@ -135,7 +136,7 @@ const update = () => {
 const distract = () => {
   distracting.value = true
   distractTimer = setInterval(() => {
-    distractTimeDisplay.value = timeFormated(++distractTime)
+    distractTimeDisplay.value = data.timeFormated(++distractTime)
   }, 1000)
 }
 
