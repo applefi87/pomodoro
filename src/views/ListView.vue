@@ -4,13 +4,17 @@ table
   tr
     th 標題
     th 專案
+    th 開始時間
     th 專心
     th 分心
+
   tr(v-for="it in data.endLists")
     td.title {{ it.title }}
     td.project {{ it.project }}
-    td.focus {{ it.totalTime }}
-    td.distract {{ it.distractTime }}
+    td.startTime {{ it.startTime }}
+    td.totalTime {{ it.totalTime }}
+    td.distractTime {{ it.distractTime }}
+
 
 </template>
 

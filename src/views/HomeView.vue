@@ -44,7 +44,7 @@ const data = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
-const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", totalTime: 0, distractTime: 0, })
+const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", totalTime: 0, distractTime: 0, startTime:0 })
 console.log(nowItem);
 let leftTime = 0
 let distractTime = 0
@@ -69,6 +69,9 @@ const start = () => {
   distractTime = 0
   if (playState.value === '專心中') {
     leftTime = time
+    // 加上開始時間+丟到執行中
+    data.lists[0].startTime= new Date().getHours() + ':'+new Date().getMinutes()
+    console.log( data.lists[0].startTime);
     Object.assign(nowItem, data.lists[0])
   } else if (playState.value === '休息中') {
     leftTime = rest
@@ -119,7 +122,6 @@ const end = (num) => {
   else if (num) {
     alarm.playAudio(num)
   }
-  console.log(data.endLists);
   update()
 }
 // 更新狀態文字
