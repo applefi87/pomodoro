@@ -11,7 +11,7 @@ hr
 div(v-if="data.lists.length == 0 && !going")
   h1.text-center 無任務，請新增於上方
 div(v-else)
-  h1(v-if="playState === '專心中'") 專案:{{ nowItem.project }}  名稱: {{ nowItem.title }}
+  h1(v-if="playState === '專心中'") 名稱: {{ nowItem.title }}  專案:{{ nowItem.project }} 
   h1(v-else)  名稱: {{ nowItem.title }}  
   hr
   h1.text-center

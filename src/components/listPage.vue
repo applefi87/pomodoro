@@ -5,15 +5,17 @@ transition-group(tag="ul" name="list" type="transition-group" :data="data")
       li.list-group-item
         v-icon.mr-4(icon="mdi-drag-horizontal-variant")
         span.title 名稱:
-        
-        span.input(v-if="!element.edit") {{ element.title +element.edit}}
-        span.input(v-else) {{ data.editTitle }}
+        span.input(v-if="!element.edit") {{ element.title }}
+        input.input(v-else type="text" v-model="data.editTitle" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
         span.title 專案:
         span.input(v-if="!element.edit") {{ element.project }}
-        span.input(v-else) {{ data.editProject }}     
-        v-icon.edit(icon="mdi-pencil" @click="data.edit(element.id)") 
-        v-icon(icon="mdi-content-duplicate") 
-        | {{data.id}}
+        input.input(v-else  type="text" v-model="data.editProject" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
+        v-icon.edit(v-if="!element.edit" icon="mdi-pencil" @click="data.edit(element.id)")
+        div.editbtn(v-else)
+          v-icon.edit(icon="mdi-check" @click="data.editSubmit(element.id)") 
+          v-icon.edit(icon="mdi-cancel" @click="data.editCancel(element.id)") 
+        v-icon(icon="mdi-content-duplicate")
+
 </template>
 
 <script setup>
@@ -44,13 +46,18 @@ li
   font-weight: 700
   font-size: 20px
 .input
+  margin:0 10px
   width: 200px
   display: inline-block
+input.input
+  border:1px black solid
+  border-radius: 5px
 .input.project
   width: 150px
 .edit
   margin-right: 80px
-
+.editbtn
+  display: inline-block
 
   // 移動清單 (下方調速度未完成)
 

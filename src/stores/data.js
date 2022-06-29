@@ -16,22 +16,32 @@ export const useDataStore = defineStore('data', {
         { id: this.id++, title, project, edit: false, totalTime: 0, distractTime: 0, }
       )
     },
+    findIdx(id) {
+      return this.lists.findIndex((it) => { return it.id == id })
+    },
     edit(id) {
-      const idx = this.lists.findIndex((it) => {return it.id == id })
+      this.editCancel()
+      const idx = this.findIdx(id)
       this.editTitle = this.lists[idx].title
       this.editProject = this.lists[idx].project
       this.lists[idx].edit = true
     },
     editSubmit(id) {
-      const idx = this.lists.findIndex((it) => {return it.id == id })
+      const idx = this.findIdx(id)
       this.lists[idx].title = this.editTitle
       this.lists[idx].project = this.editProject
       this.lists[idx].edit = false
+    },
+    editCancel(id) {
+      if (id) {
+        const idx = this.findIdx(id)
+        this.lists[idx].edit = false
+      } else {
+        this.lists = this.lists.map(it => {it.edit = false;return it})
+      }
     }
-
   },
   persist: {
-    key: 'pomotoro-setting',
-    paths: ['lists']
+    key: 'pomotoro-setting'
   },
 })
