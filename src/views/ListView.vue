@@ -4,6 +4,8 @@ button(@click="clear") 清空
 select(v-model="projectFilter")
   option(:value="false") 全部
   option(v-for="p in projectList" :value="p") {{ p }}
+| 共專心:{{ total.focus }}
+| 共分心:{{ total.distract }}
 table
   tr
     th 標題
@@ -15,7 +17,7 @@ table
     td.title {{ it.title }}
     td.project {{ it.project }}
     td.startTime {{ it.startTime }}
-    td.totalTime {{ it.totalTime }}
+    td.focusTime {{ it.focusTime }}
     td.distractTime {{ it.distractTime }}
 </template>
 
@@ -42,6 +44,13 @@ const filtedList = computed(() => {
   return projectFilter.value ? data.endLists.filter(it => it.project === projectFilter.value) : data.endLists
 })
 
+// 顯示專心與分心時間(過濾後的,以物件表示)
+const total = computed(() => {
+  // 統計數字後，data.timeFormated 轉成文字00:00
+  const focus = data.timeFormated(filtedList.value.map(it => it.focusTime).reduce((sum, n) => sum + n, 0))
+  const distract = data.timeFormated(filtedList.value.map(it => it.distractTime).reduce((sum, n) => sum + n, 0))
+  return {  focus, distract }
+})
 </script>
 
 <style lang="sass" scoped>
@@ -56,6 +65,11 @@ td,th
 .title
   width: 40%
 
+
+button
+  padding:5px
+  border: 1px solid black
+  border-radius: 3px
 // 過濾相關
   // 專案過濾用
 select
@@ -64,6 +78,5 @@ select
   margin-left: 10px
   padding: 0 5px
   font-size: 20px
-  appearance: 
 </style>
  

@@ -44,8 +44,7 @@ const data = useDataStore()
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
-const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", totalTime: 0, distractTime: 0, startTime:0 })
-console.log(nowItem);
+const nowItem = reactive(data.lists[0]||{ id: 0, title: '不會顯示，只是避免F5後沒資料報錯', project: "", focusTime: 0, distractTime: 0, startTime:0 })
 let leftTime = 0
 let distractTime = 0
 const leftTimeDisplay = ref('00:00')
@@ -71,7 +70,6 @@ const start = () => {
     leftTime = time
     // 加上開始時間+丟到執行中
     data.lists[0].startTime= new Date().getHours() + ':'+new Date().getMinutes()
-    console.log( data.lists[0].startTime);
     Object.assign(nowItem, data.lists[0])
   } else if (playState.value === '休息中') {
     leftTime = rest
@@ -81,7 +79,7 @@ const start = () => {
     Object.assign(nowItem, data.restLists[1])
   }
   // 先存進去該次的總計時 避免過程改掉抓到新的
-  nowItem.totalTime = time
+  nowItem.focusTime = time
   // 當下立刻更新顯示時間
   leftTimeDisplay.value = data.timeFormated(leftTime)
   distractTimeDisplay.value = data.timeFormated(distractTime)
@@ -107,7 +105,7 @@ const end = (num) => {
     new Notification(nowItem.title + '時間到', { body: 'nowItem.title', icon: 'https://github.com/rogeraabbccdd.png' })
   }
   // 更新專心時間-分心時間
-  nowItem.totalTime = nowItem.totalTime - distractTime
+  nowItem.focusTime = nowItem.focusTime - distractTime
   // 更新分心時間
   nowItem.distractTime = distractTime
 
@@ -152,7 +150,7 @@ const stop = () => {
   going.value = false
 }
 const earlier = () => {
-  nowItem.totalTime = nowItem.id > 0 ? nowItem.totalTime - leftTime - distractTime : rest - leftTime
+  nowItem.focusTime = nowItem.id > 0 ? nowItem.focusTime - leftTime - distractTime : rest - leftTime
   end(2)
 }
 const duplicate = () => {

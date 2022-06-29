@@ -5,7 +5,7 @@ export const useDataStore = defineStore('data', {
   state: () => ({
     lists: [],
     endLists: [],
-    restLists: [{ id: -1, title: '小休息', project: "", totalTime: 0, distractTime: 0, startTime:0 }, { id: -2, title: '大休息', project: "", totalTime: 0, distractTime: 0, startTime:0 }, { id: -3, title: '結束', project: "", totalTime: 0, distractTime: 0, startTime:0 }],
+    restLists: [{ id: -1, title: '小休息', project: "", focusTime: 0, distractTime: 0, startTime:0 }, { id: -2, title: '大休息', project: "", focusTime: 0, distractTime: 0, startTime:0 }, { id: -3, title: '結束', project: "", focusTime: 0, distractTime: 0, startTime:0 }],
     id: 4,
     editTitle: '',
     editProject: ''
@@ -14,7 +14,7 @@ export const useDataStore = defineStore('data', {
   actions: {
     addlist(title, project) {
       this.lists.push(
-        { id: this.id++, title, project, edit: false, totalTime: 0, distractTime: 0, startTime:0 }
+        { id: this.id++, title, project, edit: false, focusTime: 0, distractTime: 0, startTime:0 }
       )
     },
     findIdx(id) {
