@@ -8,7 +8,7 @@ select(v-model="projectFilter")
 | 共分心:{{ total.distract }}
 table
   tr
-    th 標題
+    th 標題 
     th 專案
     th 開始時間
     th 專心
