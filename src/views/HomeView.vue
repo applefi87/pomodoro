@@ -102,7 +102,7 @@ const end = (num) => {
   clearInterval(timer)
   clearInterval(distractTimer)
   if (alarm.notify) {
-    new Notification(nowItem.title + '時間到', { body: 'nowItem.title', icon: 'https://github.com/rogeraabbccdd.png' })
+    new Notification(nowItem.title + '時間到', { body: 'nowItem.title', icon: 'https://raw.githubusercontent.com/applefi87/pomodoro/master/public/favicon.ico' })
   }
   // 更新專心時間-分心時間
   nowItem.focusTime = nowItem.focusTime - distractTime
