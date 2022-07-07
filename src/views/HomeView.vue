@@ -1,45 +1,47 @@
 <template lang="pug">
-hr
-div.input( @keydown.enter="submit")
-  p 標題:
-  input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
-  p 專案:
-  input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
-  button(@click="submit") 送出
-  button.cancel(@click="cancel") 取消
-hr
-div(v-if="data.lists.length == 0 && !going")
-  h1.text-center 無任務，請新增於上方
-div(v-else)
-  h1(v-if="playState === '專心中'") 名稱: {{ nowItem.title }}  專案:{{ nowItem.project }} 
-  h1(v-else)  名稱: {{ nowItem.title }}  
-  hr
-  h1.text-center
-  v-row.text-center
-    v-col(cols='8').timer  {{ leftTimeDisplay }} 
-    v-col(cols='4' v-if="going && playState === '專心中'").timer 分心:{{ distractTimeDisplay }}
-    v-col(cols='8' )
-      v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
-      div.mx-3(v-else :style="{display:'inline-block'}")
-        v-btn.mx-3( icon='mdi-pause' @click='stop')
-        v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
-      v-btn.mx-3( icon='mdi-content-duplicate' @click='nowItem.id>0?data.duplicate(0):1' :style="dulplicateStyle")
-    v-col(cols='4' v-if="going && playState === '專心中'")
-      v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
-      v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
-hr
-listPage
+div.content
+  div.input( @keydown.enter="submit")
+    div.input-bar
+      div
+        p 標題:
+        input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
+      div
+        p 專案:
+        input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
+    div.btn
+      button(@click="submit") 送出
+      button.cancel(@click="cancel") 取消
+  div.timer
+    div(v-if="data.lists.length == 0 && !going")
+      h1.text-center 無任務，請新增於上方
+    div(v-else)
+      h1.title(v-if="playState === '專心中'") 名稱: {{ nowItem.title }} <br> 專案:{{ nowItem.project }} 
+      h1.title(v-else)  名稱: {{ nowItem.title }}  
+      hr
+      v-row.text-center
+        v-col(cols='12' ).timerNum  剩餘: {{ leftTimeDisplay }} 
+          div.btns
+            v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
+            div.mx-3(v-else :style="{ display: 'inline-block' }")
+              v-btn.mx-3( icon='mdi-pause' @click='stop')
+              v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
+              v-btn.mx-3( icon='mdi-content-duplicate' @click='nowItem.id > 0 ? data.duplicate(0) : 1' :style="dulplicateStyle")
+        v-col(cols='12' v-if="going && playState === '專心中'").timerNum 分心:{{ distractTimeDisplay }}
+          div.btns(cols='4' v-if="going && playState === '專心中'")
+            v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
+            v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
+  listPage.list
 </template>
 
 <script setup>
-import { ref, reactive, computed,toRefs } from 'vue'
+import { ref, reactive, computed, toRefs } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
 import listPage from '../components/listPage.vue'
 
 const alarm = useAlarmStore()
 const data = useDataStore()
-const {going} = toRefs(data)
+const { going } = toRefs(data)
 
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
@@ -102,7 +104,8 @@ const end = (num) => {
   clearInterval(timer)
   clearInterval(distractTimer)
   if (alarm.notify) {
-    new Notification(nowItem.title + '時間到', { body: nowItem.title , icon: 'https://raw.githubusercontent.com/applefi87/pomodoro/master/public/favicon.ico' })
+    // 不知為何手機開通知會當掉
+    new Notification(nowItem.title + '時間到', { body: nowItem.title, icon: 'https://raw.githubusercontent.com/applefi87/pomodoro/master/public/favicon.ico' })
   }
   // 更新專心時間-分心時間
   nowItem.focusTime = nowItem.focusTime - distractTime
@@ -204,35 +207,82 @@ const cancel = (set) => {
 </script >
 
 <style scoped lang='sass'>
-.input
-  height: 50px
+.content
   display: flex
+  flex-direction: row-reverse
+  flex-wrap: wrap
+  justify-content: space-between
+    //  @include phone
+    // background:blue
+// 輸入區 
+.input
+  width: 46%
+  display: flex
+  flex-direction: column
   align-items: center
   line-height: 40px
   font-size: 35px
-  input
-    height: 40px
-    width: 400px
-    font-size: 30px
-    padding: 0 10px
-    border: 1px solid black
-    border-radius: 5px
-    line-height: 40px
-  .project
+  background: #888
+  .input-bar
+    width: 100%
+    display: flex
+    flex-wrap: wrap
+    flex-direction: column
+    justify-content: space-between
+    div
+      display: flex
+      flex-direction: row
+      width: 100%
+      margin-block: 20px
+      p
+        margin-left: 10px
+        font-weight: 700
+    input
+      height: 40px
+      line-height: 40px
+      width: 450px
+      padding: 0 10px
+      border: 1px solid black
+      border-radius: 5px
+      .project
+        width: 300px
+  .btn
     width: 300px
-  p
-    margin-left: 10px
-    font-weight: 700
-  button
-    height: 40px
-    width: 100px
-    margin-left: 20px
-    border: 1px solid black
-    border-radius: 5px
-    font-weight: 700
-    color: white
-    background: #0a0
-
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    button
+      height: 40px
+      width: 100px
+      margin-left: 20px
+      border: 1px solid black
+      border-radius: 5px
+      font-weight: 700
+      color: white
+      background: #0a0
+// 計時區
 .timer
+  width: 48%
+  background: #909
+  &>div
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+  .title
+    display: block
+listpage
+  width: 500px
+  height: 500px
+  background: green  
+.timerNum
   font-size: 40px
+  // 
+
+.btns
+  display: flex
+  flex-direction: row
+  justify-content: center
+.list
+  width: 46%
+  background: yellow
 </style>
