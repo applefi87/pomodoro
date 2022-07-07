@@ -6,17 +6,20 @@
   select(v-model="projectFilter")
     option(:value="false") 全部 
     option(v-for="p in projectList" :value="p") {{ p }}
-  |  專心:{{ total.focus }}
-  | 分心:{{ total.distract }}
+  br
+  |  專心:{{ total.focus }} &nbsp;
+  |  分心:{{ total.distract }}
+  br
+  br
   table
     tr
-      th 專案
+      th(v-if="!projectFilter") 專案
       th 標題 
       th 專心
       th 分心
       th 時間
     tr(v-for="it in filtedList")
-      td.project {{ it.project }}
+      td.project(v-if="!projectFilter") {{ it.project }}
       td.title {{ it.title }}
       td.focusTime {{ it.focusTime }}
       td.distractTime {{ it.distractTime }}
@@ -32,7 +35,7 @@ const clear = () => {
   data.endLists = []
 }
 
-// 建立專案清單供過過濾
+// 建立專案清單供篩選
 const projectList = computed(() => {
   // 從完成清單取出有專案的專案名稱
   const list = data.endLists.filter(it => it.project).map(it => it.project)
@@ -72,7 +75,7 @@ table
   @include phone
   width: 100%
 td,th
-  border:1px solid black
+  border:1px solid white
   padding:0 10px
   @include phone
     border: none
@@ -81,7 +84,14 @@ th
   color: #0a0
   @include phone
     border-bottom: 1px solid black
-
+td
+  border-left: 1px solid yellow
+  border-right: 1px solid yellow
+  border-bottom: 2px dashed #ffb
+td:first-child
+    border-left: 1px solid white
+td:last-child
+  border-right: 1px solid white
 .title
   width: 40%
   @include phone
@@ -93,7 +103,7 @@ button
   background: #ff8
   border: 1px solid black
   border-radius: 3px
-
+  margin-bottom: 10px
 // 專案過濾用
 select
   height: 25px

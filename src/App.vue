@@ -20,7 +20,11 @@ import { useDataStore } from './stores/data.js'
 const alarm = useAlarmStore()
 const dataList = useDataStore()
 </script>
-
+<style>
+v-bar{
+    background: rgb(224, 122, 6)
+}
+</style>
 <style lang="sass">
 @import '@/styles/mixin/_mixin'
 .v-container
@@ -31,7 +35,7 @@ v-bar
   align-items: center
   padding: 30px 0 5px
   position: fixed
-  background: #0a0
+
   z-index: 1040
   top: 0
   width: 80px

@@ -42,7 +42,11 @@ const dragOptions = computed(() => {
   }
 })
 </script>
-
+<style>
+.list-group-item *{
+  color: rgb(255, 255, 255)
+}
+</style>
 <style lang="sass" scoped>
 @import '@/styles/mixin/_mixin'
 // flex
@@ -56,9 +60,9 @@ const dragOptions = computed(() => {
   list-style-type: none
   cursor: default
   vertical-align: middle
-  margin: 5px 0 
+  margin: 5px 3px
   padding: 3px 0 3px 3px
-  border:  1px solid #999
+  border:  1px solid rgb(251, 255, 185)
   border-radius: 3px
   &>div
     width: 100%
@@ -66,6 +70,7 @@ const dragOptions = computed(() => {
 .inputDiv
   width: 100%
   max-width: 400px
+
   .title
     flex-shrink: 0
     font-weight: 700
@@ -87,7 +92,7 @@ const dragOptions = computed(() => {
       font-size: 20px
 
 input.input
-  border:1px black solid
+  border:1px white solid
   border-radius: 5px
 .input.project
   width: 150px

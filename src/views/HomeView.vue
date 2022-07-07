@@ -204,7 +204,6 @@ const cancel = (set) => {
 
 
 </script >
-
 <style scoped lang='sass'>
 @import '@/styles/mixin/_mixin'
 .content
@@ -220,7 +219,8 @@ const cancel = (set) => {
   flex-direction: column
   align-items: center
   line-height: 40px
-  background: #888
+  background: rgb(255, 248, 155)
+  border-bottom: double 1px rgb(197, 197, 197) 
   @include phone
     width: 100%
   .input-bar
@@ -235,7 +235,7 @@ const cancel = (set) => {
       width: 100%
       margin-block: 20px
       p
-        margin-left: 10px
+        margin: 0 5px 0 15px
         font-weight: 700
         font-size: calc(15px + 1vw)
         @include phone
@@ -248,8 +248,10 @@ const cancel = (set) => {
       border: 1px solid black
       border-radius: 5px
       font-size: calc(13px + 1vw)
+      background: white
   .btn
     width: 300px
+    margin-bottom: 20px
     display: flex
     flex-direction: row
     justify-content: space-between
@@ -261,13 +263,13 @@ const cancel = (set) => {
       border-radius: 5px
       font-weight: 700
       color: white
-      background: #0a0
+      background: rgb(255, 139, 139)
       @include phone
         font-size: 1.5rem
 // 計時區
 .timer
   width: calc(50% - 80px)
-  background: #909
+  background: rgb(255, 252, 204)
   @include phone
     width: 100%
     position: sticky
@@ -293,7 +295,7 @@ const cancel = (set) => {
   justify-content: center
 .list
   width: 50% 
-  background: yellow
+  background: rgb(92, 195, 115)
   @include phone
     width: 100%
 </style>
