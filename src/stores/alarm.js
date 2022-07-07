@@ -16,7 +16,6 @@ export const useAlarmStore = defineStore('alarm', {
     },
     changeNotify() {
       if (!this.notify && 'Notification' in window) {
-        console.log(window);
         Notification.requestPermission(p => {
           if (p === 'granted') {
             this.notify = true
