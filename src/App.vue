@@ -1,8 +1,6 @@
 <template lang="pug" >
 v-app
   v-bar
-    template(v-slot:image)
-    template(v-slot:prepend)
     v-btn(icon="mdi-home" to="/")
     v-btn(icon="mdi-format-list-bulleted-square" to="/list")
     v-spacer
@@ -24,7 +22,9 @@ const dataList = useDataStore()
 </script>
 
 <style lang="sass">
-@import '@/style/mixin/_mixin'
+@import '@/styles/mixin/_mixin'
+.v-container
+  padding: 0
 v-bar  
   display: flex
   flex-direction: column
@@ -36,8 +36,9 @@ v-bar
   top: 0
   width: 80px
   bottom: 0
-  left: calc( 50% - 40px)
+  right: 50% 
   @include phone
+    position: sticky
     flex-direction: row
     padding: 0 5px 0 30px
     width: 100%

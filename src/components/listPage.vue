@@ -10,17 +10,16 @@ transition-group(tag="ul" name="list" type="transition-group" :data="data")
               span.title 名稱:
               span.input(v-if="!element.edit") {{ element.title }}
               input.input(v-else type="text" v-model="data.editTitle" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
-            div.inputDiv.f(v-if="element.project.length > 1")
+            div.inputDiv.f(v-if="element.project.length > 1 || element.edit")
               span.title 專案:
               span.input(v-if="!element.edit") {{ element.project }}
               input.input(v-else  type="text" v-model="data.editProject" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
-          div
-            div.btns.f(v-if="!element.edit")
-              v-icon.edit( icon="mdi-pencil" @click="data.edit(element.id)")
-              v-icon(icon="mdi-content-duplicate" @click="data.duplicate(element.id)")
-            div.btns.f(v-else)
-              v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
-              v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
+          div.btns.f(v-if="!element.edit")
+            v-icon.edit( icon="mdi-pencil" @click="data.edit(element.id)")
+            v-icon(icon="mdi-content-duplicate" @click="data.duplicate(element.id)")
+          div.btns.f(v-else)
+            v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
+            v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
             
 </template>
 
@@ -45,13 +44,14 @@ const dragOptions = computed(() => {
 </script>
 
 <style lang="sass" scoped>
-@import '@/style/mixin/_mixin'
+@import '@/styles/mixin/_mixin'
+// flex
 .f
   display: flex
   align-items: center
 .fc
   flex-direction: column
-
+// 
 .list-group-item 
   list-style-type: none
   cursor: default
@@ -71,7 +71,8 @@ const dragOptions = computed(() => {
     font-weight: 700
     font-size: 20px
     @include phone
-      font-size: 15px
+      font-size: 18px
+
 .input
   margin:0 10px
   width: 100%
@@ -90,8 +91,6 @@ input.input
   border-radius: 5px
 .input.project
   width: 150px
-.editing
-  margin-right: 3px
 .btns
   display: inline-block
   width: 65px
@@ -100,10 +99,8 @@ input.input
 .flip-list-move 
   transition: transform 2s
 
-.no-move 
-  transition: transform 2s
-
-.ghost 
+// 拖拉時的預覽(插件用)
+  .ghost 
   opacity: 0.5
   background: #c8ebfb
 

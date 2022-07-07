@@ -17,7 +17,6 @@ div.content
     div(v-else)
       h1.title(v-if="playState === '專心中'") 名稱: {{ nowItem.title }} <br> 專案:{{ nowItem.project }} 
       h1.title(v-else)  名稱: {{ nowItem.title }}  
-      hr
       v-row.text-center
         v-col(cols='12' ).timerNum  剩餘: {{ leftTimeDisplay }} 
           div.btns
@@ -207,22 +206,23 @@ const cancel = (set) => {
 </script >
 
 <style scoped lang='sass'>
+@import '@/styles/mixin/_mixin'
 .content
+  padding: 0
   display: flex
   flex-direction: row-reverse
   flex-wrap: wrap
   justify-content: space-between
-    //  @include phone
-    // background:blue
 // 輸入區 
 .input
-  width: 46%
+  width: 50%
   display: flex
   flex-direction: column
   align-items: center
   line-height: 40px
-  font-size: 35px
   background: #888
+  @include phone
+    width: 100%
   .input-bar
     width: 100%
     display: flex
@@ -237,15 +237,17 @@ const cancel = (set) => {
       p
         margin-left: 10px
         font-weight: 700
+        font-size: calc(15px + 1vw)
+        @include phone
+          font-size: 25px
     input
       height: 40px
       line-height: 40px
-      width: 450px
+      width:75%
       padding: 0 10px
       border: 1px solid black
       border-radius: 5px
-      .project
-        width: 300px
+      font-size: calc(13px + 1vw)
   .btn
     width: 300px
     display: flex
@@ -260,29 +262,38 @@ const cancel = (set) => {
       font-weight: 700
       color: white
       background: #0a0
+      @include phone
+        font-size: 1.5rem
 // 計時區
 .timer
-  width: 48%
+  width: calc(50% - 80px)
   background: #909
+  @include phone
+    width: 100%
+    position: sticky
+    top: 57px
+    z-index: 500
+    padding: 10px 0 
   &>div
     display: flex
     flex-direction: column
     flex-wrap: wrap
   .title
+    font-size: calc(20px + 1vw)
     display: block
-listpage
-  width: 500px
-  height: 500px
-  background: green  
+    margin-left: 10px
 .timerNum
-  font-size: 40px
-  // 
-
+  font-size: calc(30px + 1vw)
+  padding: 10px 0 0
+.text-center
+  margin:0
 .btns
   display: flex
   flex-direction: row
   justify-content: center
 .list
-  width: 46%
+  width: 50% 
   background: yellow
+  @include phone
+    width: 100%
 </style>
