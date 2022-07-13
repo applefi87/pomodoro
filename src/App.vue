@@ -21,8 +21,8 @@ const alarm = useAlarmStore()
 const dataList = useDataStore()
 </script>
 <style>
-v-bar{
-    background: rgb(224, 122, 6)
+v-bar {
+  background: rgb(224, 122, 6)
 }
 </style>
 <style lang="sass">
@@ -33,7 +33,6 @@ v-bar
   align-items: center
   padding: 30px 0 5px
   position: fixed
-
   z-index: 1040
   top: 0
   width: 80px
