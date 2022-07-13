@@ -8,7 +8,7 @@ v-app
     v-btn(v-else icon="mdi-bell-off" @click='alarm.changeNotify')
     v-btn(icon="mdi-dots-vertical" to="/setting")
   v-main
-    v-container(fluid)
+    v-container.pa-0(fluid)
       router-view(v-slot="{ Component }")
         keep-alive(include='HomeView')
           component(:is="Component")
@@ -27,8 +27,6 @@ v-bar{
 </style>
 <style lang="sass">
 @import '@/styles/mixin/_mixin'
-.v-container
-  padding: 0
 v-bar  
   display: flex
   flex-direction: column
@@ -53,7 +51,4 @@ v-bar
     margin: 5px 0
     @include phone
       margin: 5px 5px
-
-  
-
 </style>
