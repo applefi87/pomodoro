@@ -1,35 +1,49 @@
 <template lang="pug">
 div.content
-  div.input( @keydown.enter="submit")
-    div.input-bar
-      div
-        p 標題:
-        input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
-      div
-        p 專案:
-        input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
-    div.btn
-      button(@click="submit") 送出
-      button.cancel(@click="cancel") 取消
   div.timer
     div(v-if="data.lists.length == 0 && !going")
-      h1.text-center 無任務，請新增於上方
+      h1 無任務，請新增
     div(v-else)
-      h1.title(v-if="playState === '專心中'") 名稱: {{ nowItem.title }} <br> 專案:{{ nowItem.project }} 
-      h1.title(v-else)  名稱: {{ nowItem.title }}  
-      v-row.text-center
-        v-col(cols='12' ).timerNum  剩餘: {{ leftTimeDisplay }} 
-          div.btns
-            v-btn.mx-3(v-if="!going" icon='mdi-play' @click="start")
-            div.mx-3(v-else :style="{ display: 'inline-block' }")
-              v-btn.mx-3( icon='mdi-pause' @click='stop')
-              v-btn.mx-3( icon='mdi-skip-next' @click='earlier')
-              v-btn.mx-3( icon='mdi-content-duplicate' @click='nowItem.id > 0 ? data.duplicate(0) : 1' :style="dulplicateStyle")
-        v-col(cols='12' v-if="going && playState === '專心中'").timerNum 分心:{{ distractTimeDisplay }}
+      h1.title(v-if="playState === '專心中'") {{ nowItem.title }} <br> {{ nowItem.project }} 
+      h1.title(v-else)  {{ nowItem.title }}  
+      v-row
+        v-col(v-if="going" cols='12').timerNum  剩餘: {{ leftTimeDisplay }} 
+        v-col(v-else cols='12').timerNum
+        div.btns
+          v-btn(v-if="!going"  @click="start")
+            svg.v-btn(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512")
+              path(d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13C39.66 29.64 58.21 29.99 73.03 39.04L361 215z")
+          divv-bottom-navigation(v-else :style="{ display: 'inline-block' }")
+            v-btn( @click='stop')
+              svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512')
+                path(d='M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z')            
+            v-btn(@click='earlier')
+              svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512')
+                path(d='M52.51 440.6l171.5-142.9V214.3L52.51 71.41C31.88 54.28 0 68.66 0 96.03v319.9C0 443.3 31.88 457.7 52.51 440.6zM308.5 440.6l192-159.1c15.25-12.87 15.25-36.37 0-49.24l-192-159.1c-20.63-17.12-52.51-2.749-52.51 24.62v319.9C256 443.3 287.9 457.7 308.5 440.6z')            
+            v-btn(@click='nowItem.id > 0 ? data.duplicate(0) : 1' :style="dulplicateStyle")
+              svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512')
+                path(d='M384 96L384 0h-112c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48H464c26.51 0 48-21.49 48-48V128h-95.1C398.4 128 384 113.6 384 96zM416 0v96h96L416 0zM192 352V128h-144c-26.51 0-48 21.49-48 48v288c0 26.51 21.49 48 48 48h192c26.51 0 48-21.49 48-48L288 416h-32C220.7 416 192 387.3 192 352z')        
+        v-col(cols='12' v-if="going && playState === '專心中'").timerNum.distractT 分心:{{ distractTimeDisplay }}
           div.btns(cols='4' v-if="going && playState === '專心中'")
-            v-btn.mx-3(v-if="going && !distracting" icon='mdi-play' @click="distract")
-            v-btn.mx-3(v-if="going && distracting" icon='mdi-pause' @click='stopDistract')
-  listPage.list
+            v-btn(v-if="going && !distracting"  @click="distract")
+              svg.v-btn(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512")
+                path(d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13C39.66 29.64 58.21 29.99 73.03 39.04L361 215z")
+            v-btn(v-if="going && distracting" @click='stopDistract')
+              svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512')
+                path(d='M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z')            
+  .right
+    div.input( @keydown.enter="submit")
+      div.input-bar
+        div
+          p 標題:
+          input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
+        div
+          p 專案:
+          input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
+      div.btn
+        button(@click="submit") 送出
+        button.cancel(@click="cancel") 取消
+    listPage.list
 </template>
 
 <script setup>
@@ -68,12 +82,18 @@ const start = () => {
   going.value = true
   distractTime = 0
   if (playState.value === '專心中') {
-    leftTime = time
+    // 結束的剩餘時間都會規0，暫停不會
+    if (leftTime === 0) {
+      leftTime = time
+    }
     // 加上開始時間+丟到執行中
     data.lists[0].startTime = new Date().getHours() + ':' + new Date().getMinutes()
     Object.assign(nowItem, data.lists[0])
   } else if (playState.value === '休息中') {
-    leftTime = rest
+    // 結束的剩餘時間都會規0，暫停不會
+    if (leftTime === 0) {
+      leftTime = rest
+    }
     Object.assign(nowItem, data.restLists[0])
     // 清單空了，跳成結束畫面停止執行
   } else {
@@ -116,7 +136,8 @@ const end = (num) => {
     data.endLists.push(JSON.parse(JSON.stringify(nowItem)))
     data.lists.shift()
   }
-
+  // 跟暫停區分(暫停不經過這 點撥放時有剩餘時間)
+  leftTime = 0
 
   if (num === 0) { alarm.playAudio() }
   else if (num) {
@@ -206,12 +227,73 @@ const cancel = (set) => {
 </script >
 <style scoped lang='sass'>
 @import '@/styles/mixin/_mixin'
+h1
+  color: #E96D6D
 .content
   padding: 0
+  height: 100vh
   display: flex
-  flex-direction: row-reverse
   flex-wrap: wrap
   justify-content: space-between
+  align-content: stretch
+
+// 計時區
+.timer
+  width: calc(50% - 80px)
+  margin-top: 100px
+  @include phone
+    width: 100%
+    position: sticky
+    top: 57px
+    z-index: 500
+    padding: 10px 0
+    // 內部垂直排 
+  &>div
+    text-align: center
+    display: flex
+    flex-direction: column
+    flex-wrap: wrap
+    align-items: center
+    // 標題/專案文字
+  .title
+    color: #E96D6D
+    font-size: calc(30px + 3vw)
+    line-height: calc(40px + 3vw)
+    display: block
+    margin-left: 10px
+// 倒數時間
+.timerNum
+  color: #707070
+  font-size: calc(30px + 3vw)
+  margin: 10px 0 20px
+
+//分心的標題 
+.distractT
+  font-size: calc(30px + 2vw)
+  color: #979797
+  .v-btn
+    margin-top: 5px
+    height: 35px
+
+// 按鈕的容器
+.btns
+  padding: 0px 0 30px
+  width: 100%
+  display: flex
+  flex-direction: row
+  justify-content: center
+
+.v-btn
+  box-shadow: none
+  color: #E96D6D
+  fill: #E96D6D
+  height: 30px
+  margin: 0 5px
+.list
+  width: 50% 
+  background: rgb(92, 195, 115)
+  @include phone
+    width: 100%
 // 輸入區 
 .input
   width: 50%
@@ -266,36 +348,5 @@ const cancel = (set) => {
       background: rgb(255, 139, 139)
       @include phone
         font-size: 1.5rem
-// 計時區
-.timer
-  width: calc(50% - 80px)
-  background: rgb(255, 252, 204)
-  @include phone
-    width: 100%
-    position: sticky
-    top: 57px
-    z-index: 500
-    padding: 10px 0 
-  &>div
-    display: flex
-    flex-direction: column
-    flex-wrap: wrap
-  .title
-    font-size: calc(20px + 1vw)
-    display: block
-    margin-left: 10px
-.timerNum
-  font-size: calc(30px + 1vw)
-  padding: 10px 0 0
-.text-center
-  margin:0
-.btns
-  display: flex
-  flex-direction: row
-  justify-content: center
-.list
-  width: 50% 
-  background: rgb(92, 195, 115)
-  @include phone
-    width: 100%
+
 </style>
