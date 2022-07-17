@@ -51,7 +51,6 @@ const changePage = page => {
   bottom: 0
   right: 50% 
   @include phone
-    position: sticky
     flex-direction: row
     padding: 0 5px 0 5px
     width: 100%
@@ -75,7 +74,11 @@ const changePage = page => {
   color: #E96D6D
   @include phone
     box-shadow: 1px 0px 1px 0px rgba(97, 37, 37, 0.567)
-</style>
+
+.v-main
+  @include phone
+    margin-top: 48px
+  </style>
 
 <style>
 /* #app .active{

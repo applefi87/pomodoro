@@ -13,7 +13,7 @@ div.content
           v-btn(v-if="!going"  @click="start")
             svg.v-btn(xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512")
               path(d="M361 215C375.3 223.8 384 239.3 384 256C384 272.7 375.3 288.2 361 296.1L73.03 472.1C58.21 482 39.66 482.4 24.52 473.9C9.377 465.4 0 449.4 0 432V80C0 62.64 9.377 46.63 24.52 38.13C39.66 29.64 58.21 29.99 73.03 39.04L361 215z")
-          divv-bottom-navigation(v-else :style="{ display: 'inline-block' }")
+          div(v-else :style="{ display: 'inline-block' }")
             v-btn( @click='stop')
               svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512')
                 path(d='M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z')            
@@ -32,13 +32,13 @@ div.content
               svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512')
                 path(d='M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z')            
   .right
-    div.input( @keydown.enter="submit")
+    div.input(v-if="false" @keydown.enter="submit")
       div.input-bar
         div
-          p 標題:
+          p Title:
           input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
         div
-          p 專案:
+          p Task:
           input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
       div.btn
         button(@click="submit") 送出
@@ -188,12 +188,10 @@ const inputTitle = ref('')
 const inputProject = ref('')
 
 const check = computed(() => {
-  if (inputTitle.value.length > 1) {
-    return { border: '4px solid green' }
-  } else if (inputTitle.value.length == 1) {
-    return { border: '4px solid red' }
+  if (inputTitle.value.length == 1) {
+    return { border: '2px solid #E96D6D' }
   } else {
-    return { border: '3px solid black' }
+    return {}
   }
 })
 
@@ -233,21 +231,22 @@ h1
   padding: 0
   height: 100vh
   display: flex
-  flex-wrap: wrap
   justify-content: space-between
   align-content: stretch
-
-// 計時區
+  @include phone
+    flex-direction: column
+    justify-content: flex-start
+    align-items: center
+// --------------------------計時區
 .timer
   width: calc(50% - 80px)
   margin-top: 100px
   @include phone
+    margin-top: 10px
     width: 100%
-    position: sticky
-    top: 57px
-    z-index: 500
-    padding: 10px 0
-    // 內部垂直排 
+    min-height: 250px
+    height: 50vw
+    flex-shrink: 0
   &>div
     text-align: center
     display: flex
@@ -257,23 +256,28 @@ h1
     // 標題/專案文字
   .title
     color: #E96D6D
-    font-size: calc(30px + 3vw)
-    line-height: calc(40px + 3vw)
+    font-size: calc(20px + 3.5vw)
+    line-height: calc(30px + 3.5vw)
     display: block
     margin-left: 10px
 // 倒數時間
 .timerNum
   color: #707070
-  font-size: calc(30px + 3vw)
-  margin: 10px 0 20px
-
+  font-size: calc(25px + 3.3vw)
+  padding: 10px 0 20px
+  @include phone
+    margin: 0
+    padding: 5px 0 10px
 //分心的標題 
 .distractT
-  font-size: calc(30px + 2vw)
+  font-size: calc(20px + 2.5vw)
   color: #979797
   .v-btn
     margin-top: 5px
     height: 35px
+    @include phone
+      margin-top: 0px
+      height: 25px
 
 // 按鈕的容器
 .btns
@@ -282,30 +286,43 @@ h1
   display: flex
   flex-direction: row
   justify-content: center
-
+  @include phone
+    padding: 0px 0 0px
 .v-btn
   box-shadow: none
   color: #E96D6D
   fill: #E96D6D
   height: 30px
   margin: 0 5px
-.list
-  width: 50% 
-  background: rgb(92, 195, 115)
   @include phone
-    width: 100%
+    height: 25px
+//----------------------------------右側
+.right
+  width:50% 
+  @include phone
+    width:95% 
 // 輸入區 
 .input
-  width: 50%
+  width: 90%
+  margin: 20px auto
+  border-radius: 10px
+  box-shadow: 1px 1px 2px 0px rgba(97, 37, 37, 0.567)
+  background: #F8C5C5
   display: flex
   flex-direction: column
   align-items: center
   line-height: 40px
-  background: rgb(255, 248, 155)
   border-bottom: double 1px rgb(197, 197, 197) 
   @include phone
-    width: 100%
+    width: 95%
+    position: absolute
+    z-index: 1050
+    left: 50%
+    top: 30%
+    transform: translate(-50%,-50%)
+    box-shadow: 0 0 20px 50vh rgba(0,0,0 ,0.4 )
   .input-bar
+    color: #707070
     width: 100%
     display: flex
     flex-wrap: wrap
@@ -315,7 +332,7 @@ h1
       display: flex
       flex-direction: row
       width: 100%
-      margin-block: 20px
+      margin: 10px 0
       p
         margin: 0 5px 0 15px
         font-weight: 700
@@ -323,30 +340,39 @@ h1
         @include phone
           font-size: 25px
     input
+      color: #707070
       height: 40px
       line-height: 40px
       width:75%
+      border: none
+      outline: none
       padding: 0 10px
-      border: 1px solid black
       border-radius: 5px
       font-size: calc(13px + 1vw)
-      background: white
   .btn
     width: 300px
-    margin-bottom: 20px
+    margin-bottom: 10px
     display: flex
     flex-direction: row
     justify-content: space-between
     button
+      font-size: calc(15px + 1vw)
       height: 40px
       width: 100px
       margin-left: 20px
-      border: 1px solid black
       border-radius: 5px
       font-weight: 700
       color: white
-      background: rgb(255, 139, 139)
+      box-shadow: 1px 1px 2px 0px rgba(97, 37, 37, 0.567)
+      background: #E96D6D
       @include phone
         font-size: 1.5rem
-
+.list
+  width: 90%
+  margin: 20px auto
+  border-radius: 10px
+  box-shadow: 1px 1px 2px 0px rgba(97, 37, 37, 0.567)
+  background: #F8C5C5
+  @include phone
+    width: 100%
 </style>
