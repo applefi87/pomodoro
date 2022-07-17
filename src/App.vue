@@ -1,12 +1,15 @@
 <template lang="pug" >
 v-app
-  v-bar
-    v-btn(icon="mdi-home" to="/")
-    v-btn(icon="mdi-format-list-bulleted-square" to="/list")
+  .bar
+    v-btn(v-if="!active.home" icon="mdi-home" to="/" @click="changePage('home')")
+    v-btn.active(v-else icon="mdi-home" )
+    v-btn(v-if="!active.record" icon="mdi-format-list-bulleted-square" to="/list" @click="changePage('record')")
+    v-btn.active(v-else icon="mdi-format-list-bulleted-square" )
     v-spacer
     v-btn(v-if="alarm.notify" icon="mdi-bell" @click='alarm.changeNotify')
     v-btn(v-else icon="mdi-bell-off" @click='alarm.changeNotify')
-    v-btn(icon="mdi-dots-vertical" to="/setting")
+    v-btn(v-if="!active.setting" icon="mdi-dots-vertical" to="/setting" @click="changePage('setting')")
+    v-btn.active(v-else icon="mdi-dots-vertical" )
   v-main
     v-container.pa-0(fluid)
       router-view(v-slot="{ Component }")
@@ -14,20 +17,29 @@ v-app
           component(:is="Component")
 </template>
 
+
+
 <script setup>
+import { reactive } from 'vue'
 import { useAlarmStore } from './stores/alarm.js'
-import { useDataStore } from './stores/data.js'
 const alarm = useAlarmStore()
-const dataList = useDataStore()
-</script>
-<style>
-v-bar {
-  background: rgb(224, 122, 6)
+
+// 切換頁面時,該頁面欄背景變白色 
+const active = reactive({ home: true, record: false, setting: false })
+const changePage = page => {
+  console.log(page);
+  active[page] = true
+  for (let p in active) {
+    if (page != p) { active[p] = false }
+  }
 }
-</style>
+
+</script>
+
 <style lang="sass">
 @import '@/styles/mixin/_mixin'
-v-bar  
+.bar  
+  background: #E96D6D
   display: flex
   flex-direction: column
   align-items: center
@@ -47,7 +59,22 @@ v-bar
     bottom: auto
     left: 0
   .v-btn
+    border-radius: 0
+    width: 100%
+    background: #E96D6D
+    color: white
+    box-shadow: none
     margin: 5px 0
     @include phone
       margin: 5px 5px
+#app .active
+  background: white
+  box-shadow: 1px 2px 2px 0px rgba(97, 37, 37, 0.567)
+  color: #E96D6D
+</style>
+
+<style>
+/* #app .active{
+    box-shadow: 1px 1px 2px rgba(97, 37, 37, 0.567)
+} */
 </style>
