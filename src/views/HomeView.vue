@@ -7,7 +7,7 @@ div.content
       h1.title(v-if="playState === '專心中'") {{ nowItem.title }} <br> {{ nowItem.project }} 
       h1.title(v-else)  {{ nowItem.title }}  
       v-row
-        v-col(v-if="going" cols='12').timerNum  剩餘: {{ leftTimeDisplay }} 
+        v-col(v-if="going" cols='12').timerNum  剩餘: {{ leftTimeDisplay }}
         v-col(v-else cols='12').timerNum
         div.btns
           v-btn(v-if="!going"  @click="start")
@@ -32,18 +32,24 @@ div.content
               svg.v-btn(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512')
                 path(d='M272 63.1l-32 0c-26.51 0-48 21.49-48 47.1v288c0 26.51 21.49 48 48 48L272 448c26.51 0 48-21.49 48-48v-288C320 85.49 298.5 63.1 272 63.1zM80 63.1l-32 0c-26.51 0-48 21.49-48 48v288C0 426.5 21.49 448 48 448l32 0c26.51 0 48-21.49 48-48v-288C128 85.49 106.5 63.1 80 63.1z')            
   .right
-    div.input(v-if="false" @keydown.enter="submit")
-      div.input-bar
+    .input(v-if="!plusState"  @keydown.enter="submit")
+      .input-bar
+        .closeInput
+          label.closeInput(v-if="!plusState" for="plus")
+            v-icon(icon="mdi-window-close")
         div
           p Title:
           input(type="text" :style="check" placeholder="至少2個字"  v-model="inputTitle" @keydown.esc="cancel('title')")
         div
           p Task:
           input.project(type="text" placeholder="(選填)" v-model="inputProject" @keydown.esc="cancel('project')")
-      div.btn
+      .btn
         button(@click="submit") 送出
         button.cancel(@click="cancel") 取消
     listPage.list
+  label.plus(v-if="plusState" for="plus")
+    v-icon(icon="mdi-plus")
+  input#plus(type="checkbox" v-model="plusState")
 </template>
 
 <script setup>
@@ -56,6 +62,15 @@ const alarm = useAlarmStore()
 const data = useDataStore()
 const { going } = toRefs(data)
 
+// 當壓"+"時才跳輸入框
+const plusState = ref(true)
+window.onresize = () => {
+  if (window.innerWidth > 576) {
+    plusState.value = false
+  }
+}
+
+// 
 const time = parseInt(import.meta.env.VITE_TIME)
 const rest = parseInt(import.meta.env.VITE_REST)
 const bigRest = parseInt(import.meta.env.VITE_BIG_REST)
@@ -204,11 +219,11 @@ const submit = () => {
     inputTitle.value = ''
     inputProject.value = ''
   }
-
 }
 
 // 可區分全部取消/esc單格取消
 const cancel = (set) => {
+   plusState.value = true
   if (set === 'title') {
     inputTitle.value = ''
   } else if (set === 'project') {
@@ -217,7 +232,6 @@ const cancel = (set) => {
     inputTitle.value = ''
     inputProject.value = ''
   }
-
 }
 
 
@@ -333,6 +347,8 @@ h1
       flex-direction: row
       width: 100%
       margin: 10px 0
+      @include phone
+        margin: 0 0 20px
       p
         margin: 0 5px 0 15px
         font-weight: 700
@@ -355,6 +371,8 @@ h1
     display: flex
     flex-direction: row
     justify-content: space-between
+    @include phone
+      width: 250px
     button
       font-size: calc(15px + 1vw)
       height: 40px
@@ -375,4 +393,33 @@ h1
   background: #F8C5C5
   @include phone
     width: 100%
+.plus
+  display: none
+  position: fixed
+  border-radius: 50%
+  bottom: 5px
+  right: 5px
+  background: #E96D6D
+  height: 50px
+  width: 50px
+  text-align: center
+  line-height: 48px
+  box-shadow: 2px 2px 3px 1px rgba(97, 37, 37, 0.567)
+  // 手機板才顯示
+  @include phone
+    display: block
+  i
+    color: white
+    font-size: 40px
+#plus
+  display: none
+#app .closeInput
+  height: 30px
+  display: none 
+  text-align: end
+  margin: 0
+  padding-right: 5px
+  // 手機板才顯示
+  @include phone
+    display: block
 </style>
