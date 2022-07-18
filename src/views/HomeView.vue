@@ -47,13 +47,13 @@ div.content
         button(@click="submit") 送出
         button.cancel(@click="cancel") 取消
     listPage.list
-  label.plus(v-if="plusState" for="plus")
+  label.plus.d-block.d-sm-none(v-if="plusState" for="plus")
     v-icon(icon="mdi-plus")
   input#plus(type="checkbox" v-model="plusState")
 </template>
 
 <script setup>
-import { ref, reactive, computed, toRefs } from 'vue'
+import { ref, reactive, computed, toRefs, onUnmounted } from 'vue'
 import { useAlarmStore } from '../stores/alarm.js'
 import { useDataStore } from '../stores/data.js'
 import listPage from '../components/listPage.vue'
@@ -63,12 +63,15 @@ const data = useDataStore()
 const { going } = toRefs(data)
 
 // 當壓"+"時才跳輸入框
-const plusState = ref(true)
+const plusState = ref(!window.innerWidth > 576)
 window.onresize = () => {
   if (window.innerWidth > 576) {
     plusState.value = false
   }
 }
+onUnmounted(() => {
+  window.onresize = null
+})
 
 // 
 const time = parseInt(import.meta.env.VITE_TIME)
@@ -194,7 +197,7 @@ const earlier = () => {
 
 // 休息不可複製的造型(複製功能在data裡)
 const dulplicateStyle = computed(() => {
-  return playState.value === '休息中' ? { background: '#933', cursor: 'not-allowed' } : {}
+  return playState.value === '休息中' ? { opacity:"0", cursor: 'normal' } : {}
 })
 
 
@@ -223,7 +226,7 @@ const submit = () => {
 
 // 可區分全部取消/esc單格取消
 const cancel = (set) => {
-   plusState.value = true
+  plusState.value = true
   if (set === 'title') {
     inputTitle.value = ''
   } else if (set === 'project') {
@@ -251,6 +254,7 @@ h1
     flex-direction: column
     justify-content: flex-start
     align-items: center
+    height: 600px
 // --------------------------計時區
 .timer
   width: calc(50% - 80px)
@@ -269,6 +273,8 @@ h1
     align-items: center
     // 標題/專案文字
   .title
+    width: 100%
+    overflow: hidden
     color: #E96D6D
     font-size: calc(20px + 3.5vw)
     line-height: calc(30px + 3.5vw)
@@ -313,15 +319,19 @@ h1
 //----------------------------------右側
 .right
   width:50% 
+  height: 100%
+  display: flex
+  flex-direction: column
   @include phone
     width:95% 
+
 // 輸入區 
 .input
   width: 90%
   margin: 20px auto
   border-radius: 10px
   box-shadow: 1px 1px 2px 0px rgba(97, 37, 37, 0.567)
-  background: #F8C5C5
+  background: #FAD9D9
   display: flex
   flex-direction: column
   align-items: center
@@ -366,18 +376,18 @@ h1
       border-radius: 5px
       font-size: calc(13px + 1vw)
   .btn
-    width: 300px
+    width: 100%
     margin-bottom: 10px
     display: flex
     flex-direction: row
-    justify-content: space-between
+    justify-content: center
     @include phone
       width: 250px
     button
       font-size: calc(15px + 1vw)
       height: 40px
       width: 100px
-      margin-left: 20px
+      margin: 0 10px
       border-radius: 5px
       font-weight: 700
       color: white
@@ -385,16 +395,21 @@ h1
       background: #E96D6D
       @include phone
         font-size: 1.5rem
+// 
 .list
   width: 90%
+  height: 100%
+  overflow: hidden
   margin: 20px auto
   border-radius: 10px
   box-shadow: 1px 1px 2px 0px rgba(97, 37, 37, 0.567)
   background: #F8C5C5
   @include phone
     width: 100%
+    height: 50vh
+
+// 
 .plus
-  display: none
   position: fixed
   border-radius: 50%
   bottom: 5px

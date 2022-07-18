@@ -1,26 +1,28 @@
 <template lang="pug">
-transition-group(tag="ul" name="list" type="transition-group" :data="data")
-  draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id')
-    template(#item='{ element }'  )
-      li.list-group-item.f
-        v-icon.mr-4.drag(icon="mdi-drag-horizontal-variant")
-        div.f
-          div.fc
-            div.inputDiv.f
-              span.title 名稱:
-              span.input(v-if="!element.edit") {{ element.title }}
-              input.input(v-else type="text" v-model="data.editTitle" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
-            div.inputDiv.f(v-if="element.project.length > 1 || element.edit")
-              span.title 專案:
-              span.input(v-if="!element.edit") {{ element.project }}
-              input.input(v-else  type="text" v-model="data.editProject" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
-          div.btns.f(v-if="!element.edit")
-            v-icon.edit( icon="mdi-pencil" @click="data.edit(element.id)")
-            v-icon(icon="mdi-content-duplicate" @click="data.duplicate(element.id)")
-          div.btns.f(v-else)
-            v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
-            v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
-            
+div
+  .header To do
+  transition-group(tag="ul" name="list" type="transition-group" :data="data")
+    draggable.list-group(:list="lists" item-key="id" v-bind="dragOptions" @start="drag = true" @end="drag = false" :key='id')
+      template(#item='{ element }'  )
+        li.list-group-item.f
+          v-icon.mr-4.drag(icon="mdi-drag-horizontal-variant")
+          div.f
+            div.fc
+              div.inputDiv.f
+                span.input(v-if="!element.edit") {{ element.title }}
+                div.title.input(v-else) Title:
+                  input(type="text" v-model="data.editTitle" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
+              div.inputDiv.f(v-if="element.project.length > 1 || element.edit") 
+                span.input(v-if="!element.edit") {{ element.project }}
+                div.title.input(v-else) Task:
+                  input(type="text" v-model="data.editProject" @keydown.esc="data.editCancel(element.id)" @keydown.enter="data.editSubmit(element.id)")
+            div.btns.f(v-if="!element.edit")
+              v-icon.edit( icon="mdi-pencil" @click="data.edit(element.id)")
+              v-icon(icon="mdi-content-duplicate" @click="data.duplicate(element.id)")
+            div.btns.f(v-else)
+              v-icon.editing(icon="mdi-check" @click="data.editSubmit(element.id)") 
+              v-icon.editing(icon="mdi-cancel" @click="data.editCancel(element.id)") 
+
 </template>
 
 <script setup>
@@ -43,59 +45,89 @@ const dragOptions = computed(() => {
 })
 </script>
 <style>
-.list-group-item *{
-  color: rgb(255, 255, 255)
+.list-group-item * {
+  color: #707070
 }
 </style>
 <style lang="sass" scoped>
 @import '@/styles/mixin/_mixin'
+*
+  font-weight: 700
 // flex
 .f
   display: flex
   align-items: center
 .fc
+  display: flex
+  align-items: center
   flex-direction: column
 // 
+.header
+  top: 0
+  height: 50px
+  background: #D97E7E
+  font-size: 20px
+  line-height: 50px
+  padding-left: 20px
+  color: white
+// 
+ul
+  height: calc(100% - 50px)
+.list-group
+  height: 100%
+  overflow-y: scroll
+    // 移除拖拉欄
+  /* for Internet Explorer, Edge */
+  -ms-overflow-style: none
+  /* for Firefox */
+  scrollbar-width: none
+  &::-webkit-scrollbar 
+    display: none
 .list-group-item 
   list-style-type: none
   cursor: default
   vertical-align: middle
-  margin: 5px 3px
+  margin: 8px 5px 8px 3px
   padding: 3px 0 3px 3px
-  border:  1px solid rgb(251, 255, 185)
-  border-radius: 3px
   &>div
     width: 100%
     justify-content: space-between
 .inputDiv
+  overflow: hidden
   width: 100%
-  max-width: 400px
-
+  max-width: 300px
+  margin: 0 0 5px
+  @include phone
+    max-width: 300px
   .title
     flex-shrink: 0
     font-weight: 700
-    font-size: 20px
+    font-size: 18px
     @include phone
       font-size: 18px
+    input
+      width: 75%
+      max-width: 300px
+      margin-left: 10px
+      border-radius: 5px
+      background: white
+      outline: none
 
 .input
-  margin:0 10px
+  overflow: hidden
   width: 100%
   display: inline-block
   @include phone
     font-size: 15px
+.input.project
+  width: 150px
 
+// 
 .btns
   flex-direction: row
   i
     @include phone
       font-size: 20px
-
-input.input
-  border:1px white solid
-  border-radius: 5px
-.input.project
-  width: 150px
 .btns
   display: inline-block
   width: 65px
@@ -113,13 +145,16 @@ input.input
   min-height: 20px
 
 .list-group-item .drag 
+  color: #aaa
   cursor: move
 .list-group-item i 
-  width:30px
+  font-size: 20px
+  width: 25px
+  height: 25px
+  line-height: 25px
   cursor: pointer
   border-radius: 5px
-  line-height: 30px
+  transition: font-size 0.2s
   &:hover
-    background: #ddd
-    font-size: 27px
+    font-size: 23px
 </style>

@@ -78,6 +78,7 @@ const changePage = page => {
 .v-main
   @include phone
     margin-top: 48px
+    height: calc(100vh - 148px)
   </style>
 
 <style>
