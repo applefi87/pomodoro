@@ -59,13 +59,13 @@ const changePage = page => {
     left: 0
   .v-btn
     border-radius: 0
-    width: 100%
-    background: #E96D6D
+    width: 100% !important
+    background: #E96D6D 
     color: white
     box-shadow: none
     margin: 5px 0
     @include phone
-      width: 15%
+      width: 15% !important
       margin: 0px 3px
 
 #app .active
